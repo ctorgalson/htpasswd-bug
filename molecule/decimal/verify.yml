@@ -1,0 +1,16 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Collect information about /etc/apache2/passwdfile
+      stat:
+        path: /etc/apache2/passwdfile
+      register: passwdfile_info
+
+    - name: Check permissions on passwdfile.
+      assert:
+        that:
+          - passwdfile_info.stat.mode == "0640"
+        msg: "Expected htpasswd mode to be 0640, but found it to be {{ passwdfile_info.stat.mode }}."

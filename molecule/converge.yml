@@ -1,0 +1,47 @@
+---
+- name: Converge
+  hosts: all
+
+  vars:
+    apache_remove_default_vhost: true
+    apache_vhosts:
+      - servername: "instance"
+        documentroot: "/var/www/html"
+        extra_parameters: |
+          <Directory "/var/www/html">
+            AuthType Basic
+            AuthName "Please log in"
+            AuthUserFile "/etc/apache2/passwdfile"
+            Require valid-user
+          </Directory>
+
+    htpasswd_credentials:
+      - path: "/etc/apache2/passwdfile"
+        name: "name"
+        password: "password"
+        owner: root
+        group: www-data
+        mode: "{{ htpasswd_mode }}"
+
+  tasks:
+    - name: Install and configure Apache.
+      import_role:
+        name: geerlingguy.apache
+
+    - name: Install and configure htpasswd.
+      import_role:
+        name: geerlingguy.htpasswd
+
+    - name: Password-protect /var/www/.
+      htpasswd:
+        path: /etc/apache2/passwdfile
+        name: name
+        password: password
+        owner: root
+        group: www-data
+        mode: "{{ htpasswd_mode }}"
+      when: false
+
+  # roles:
+  #   - geerlingguy.apache
+  #   - geerlingguy.htpasswd

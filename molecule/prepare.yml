@@ -1,0 +1,11 @@
+---
+- name: Prepare
+  hosts: all
+
+  tasks:
+    - name: Install required packages.
+      apt:
+        update_cache: true
+        name:
+          - apache2-utils
+          - python3-passlib
