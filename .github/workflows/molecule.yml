@@ -1,0 +1,26 @@
+---
+name: Molecule Test
+on: [push]
+jobs:
+  test:
+    runs-on: [ubuntu-20.04]
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          - default
+          - decimal
+          - decimal_string
+          - octal
+          - octal_string
+    steps:
+      - name: Checkout codebase.
+        uses: actions/checkout@v2
+        with:
+          path: ${{ github.repository }}
+
+      - name: Run Molecule tests.
+        uses: gofrolist/molecule-action@v2
+        with:
+          molecule_command: test
+          molecule_args: --scenario-name ${{ matrix.scenario }}
