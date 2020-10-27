@@ -17,10 +17,10 @@ jobs:
       - name: Checkout codebase.
         uses: actions/checkout@v2
         with:
-          path: "${{ github.repository }}"
+          path: ${{ github.repository }}
 
       - name: Run Molecule tests.
         uses: gofrolist/molecule-action@v2
         with:
           molecule_command: test
-          molecule_args: --scenario-name {{ matrix.scenario }}
+          molecule_args: --scenario-name ${{ matrix.scenario }}
